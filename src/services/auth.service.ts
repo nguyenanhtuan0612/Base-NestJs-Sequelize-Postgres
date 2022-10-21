@@ -1,14 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Injectable } from '@nestjs/common';
 import { RegisterDto } from '@/dtos/users.dto';
 import { UsersService } from './users.service';
 import { errors } from '@/utils/errors';
-import { HttpException } from '@/exceptions/HttpException';
 import { User } from '@/entities/users.entity';
 import { genSalt, hash } from 'bcrypt';
+import { ExceptionWithMessage } from '@/exceptions/HttpException';
 
 @Injectable()
 export class AuthService {
@@ -18,11 +14,11 @@ export class AuthService {
         const check = await this.userService.findByEmail(registerDto.email);
 
         if (check)
-            throw new HttpException(
-                400,
-                errors.EMAIL_EXIST.message,
-                errors.EMAIL_EXIST.code,
+            throw new ExceptionWithMessage(
                 errors.EMAIL_EXIST.detail,
+                400,
+                errors.EMAIL_EXIST.code,
+                'Register Fail',
             ); // error
         const user = new User();
         user.email = registerDto.email;

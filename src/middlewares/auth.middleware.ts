@@ -1,12 +1,11 @@
 import { NextFunction, Response } from 'express';
-import { verify } from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@entities/users.entity';
-import { HttpException } from '@exceptions/HttpException';
-import { DataStoredInToken, RequestWithUser } from '@interfaces/auth.interface';
+import { RequestWithUser } from '@interfaces/auth.interface';
 import { IUser } from '@/interfaces/users.interface';
 import { errors } from '@/utils/errors';
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { ExceptionWithMessage } from '@/exceptions/HttpException';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
@@ -28,28 +27,31 @@ export class AuthMiddleware implements NestMiddleware {
                     next();
                 } else {
                     next(
-                        new HttpException(
+                        new ExceptionWithMessage(
+                            errors.LOGIN_ERROR_UNAUTHORIZE.detail,
                             401,
+                            errors.LOGIN_ERROR_UNAUTHORIZE.code,
                             'Wrong authentication token',
-                            errors.LOGIN_ERROR.code,
                         ),
                     );
                 }
             } else {
                 next(
-                    new HttpException(
+                    new ExceptionWithMessage(
+                        errors.LOGIN_ERROR_MISSING.detail,
                         404,
+                        errors.LOGIN_ERROR_MISSING.code,
                         'Authentication token missing',
-                        errors.LOGIN_ERROR.code,
                     ),
                 );
             }
         } catch (error) {
             next(
-                new HttpException(
+                new ExceptionWithMessage(
+                    errors.LOGIN_ERROR_UNAUTHORIZE.detail,
                     401,
+                    errors.LOGIN_ERROR_UNAUTHORIZE.code,
                     'Wrong authentication token',
-                    errors.LOGIN_ERROR.code,
                 ),
             );
         }

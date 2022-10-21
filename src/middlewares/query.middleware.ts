@@ -2,11 +2,11 @@ import { NextFunction, Response } from 'express';
 import { Options, RequestWithOptions } from '@/interfaces/request.interface';
 import { Filter, Order } from '@/dtos/query.dto';
 import { validation } from '@/utils/validators';
-import { HttpException } from '@/exceptions/HttpException';
 import { Op } from 'sequelize';
 import { errors } from '@/utils/errors';
 import { Injectable } from '@nestjs/common';
 import { NestMiddleware } from '@nestjs/common';
+import { ExceptionWithMessage } from '@/exceptions/HttpException';
 
 const generateWhere = (filter: Filter) => {
     const { prop, operator, value } = filter;
@@ -80,11 +80,11 @@ export class QueryMiddleware implements NestMiddleware {
                     );
                     if (!valid) {
                         next(
-                            new HttpException(
-                                400,
-                                'Filter error: ' + message,
-                                errors.FILTER_INVALID.code,
+                            new ExceptionWithMessage(
                                 errors.FILTER_INVALID.detail,
+                                400,
+                                errors.FILTER_INVALID.code,
+                                'Filter error: ' + message,
                             ),
                         );
                     }
@@ -104,11 +104,11 @@ export class QueryMiddleware implements NestMiddleware {
                     );
                     if (!valid) {
                         next(
-                            new HttpException(
-                                400,
-                                'Order error: ' + message,
-                                errors.ORDER_INVALID.code,
+                            new ExceptionWithMessage(
                                 errors.ORDER_INVALID.detail,
+                                400,
+                                errors.ORDER_INVALID.code,
+                                'Order error: ' + message,
                             ),
                         );
                     }

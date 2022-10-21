@@ -1,5 +1,4 @@
 import { AuthService } from '@/services/auth.service';
-import { errorHandler } from '@/utils/errors';
 import { RegisterDto } from '@dtos/users.dto';
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
@@ -14,7 +13,7 @@ export class AuthController {
             const rs = await this.service.register(registerDto);
             return res.status(200).json(rs);
         } catch (error) {
-            return res.status(error.status || 400).json(errorHandler(error));
+            throw error;
         }
     }
 }

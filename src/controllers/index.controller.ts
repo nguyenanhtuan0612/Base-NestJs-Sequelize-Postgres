@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 class IndexController {
-    public index = (req: Request, res: Response, next: NextFunction): void => {
+    public index = (req: Request, res: Response): void => {
         try {
             res.send('This is the truth of the universe');
         } catch (error) {
-            next(error);
+            throw error;
         }
     };
 }
