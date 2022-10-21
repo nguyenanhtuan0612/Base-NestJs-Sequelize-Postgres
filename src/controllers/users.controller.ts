@@ -1,6 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto } from '@dtos/users.dto';
-import { IUser } from '@interfaces/users.interface';
 import { Body, Post, Res } from '@nestjs/common';
 import { errorHandler } from '@/utils/errors';
 import { UsersService } from '@/services/users.service';

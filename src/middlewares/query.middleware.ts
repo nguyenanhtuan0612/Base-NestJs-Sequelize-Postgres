@@ -65,8 +65,8 @@ export class QueryMiddleware implements NestMiddleware {
         try {
             const { limit, offset, filter, order } = req.query;
             const options: Options = {
-                skip: Number(offset) || 0,
-                take: Number(limit) || 10,
+                offset: Number(offset) || 0,
+                limit: Number(limit) || 10,
                 where: {},
                 order: {},
             };
