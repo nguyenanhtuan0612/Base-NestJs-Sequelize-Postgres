@@ -2,8 +2,8 @@ import { Request } from 'express';
 
 export interface Options {
     where?: any;
-    take: number;
-    skip: number;
+    limit: number;
+    offset: number;
     order?: any;
 }
 
