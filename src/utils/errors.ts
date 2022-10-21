@@ -1,15 +1,3 @@
-import { HttpException } from '@exceptions/HttpException';
-export const errorHandler = (error: HttpException) => {
-    try {
-        const message: string = error.message || 'Something went wrong';
-        const code: number = error.code || 999;
-        const detail: string = error.detail || '';
-        return { code, message, detail };
-    } catch (error) {
-        return { code: 999, message: 'Something went wrong', detail: '' };
-    }
-};
-
 export const errors = {
     FILTER_INVALID: {
         detail: '{{filter.inValid}}',
@@ -22,12 +10,20 @@ export const errors = {
     INVALIDATION_FAIL: {
         code: 3,
     },
-    LOGIN_ERROR: {
+    LOGIN_ERROR_UNAUTHORIZE: {
+        detail: '{{token.unAuthorize}}',
         code: 4,
     },
     EMAIL_EXIST: {
         code: 5,
         detail: '{{email.isAlreadeExist}}',
-        message: 'Register Fail',
+    },
+    LOGIN_ERROR_MISSING: {
+        detail: '{{token.isMissing}}',
+        code: 6,
+    },
+    SEQUELIZE_ERROR: {
+        code: 7,
+        detail: '{{sequelize.error}}',
     },
 };

@@ -6,8 +6,6 @@ import { genSalt, hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly usersService: UsersService) {}
-
     async create(createUserDto: CreateUserDto) {
         const user = new User();
         user.email = createUserDto.email;
