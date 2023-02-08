@@ -10,7 +10,6 @@ import { ExceptionWithMessage } from '@/exceptions/HttpException';
 
 const generateWhere = (filter: Filter) => {
     const { prop, operator, value } = filter;
-    console.log(operator);
     switch (operator) {
         case 'eq': {
             return { [prop]: value };
