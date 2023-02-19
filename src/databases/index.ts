@@ -1,6 +1,5 @@
 import { appConfigs } from '@/config';
 import entities from '@/entities';
-import { User } from '@/entities/users.entity';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -10,6 +9,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
         SequelizeModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({
+                //console.log(appConfigs().postgres);
                 dialect: 'postgres',
                 host: appConfigs().postgres.host,
                 port: appConfigs().postgres.port,
@@ -19,6 +19,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
                 autoLoadModels: appConfigs().postgres.autoLoadModels,
                 synchronize: appConfigs().postgres.synchronize,
                 logging: false,
+                sync: { alter: true },
                 dialectOptions: {
                     timeout: 8000,
                 },
@@ -48,4 +49,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
         }),
     ],
 })
-export class PostgreSqlModule {}
+export class PostgreSqlModule {
+    constructor() {
+        console.log(appConfigs());
+    }
+}

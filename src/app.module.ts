@@ -7,9 +7,9 @@ import { PostgreSqlModule } from '@databases';
 import { JwtModule } from '@nestjs/jwt';
 import UsersController from './controllers/users.controller';
 import { UsersService } from './services/users.service';
+import { AuthController } from './controllers/auth.controller';
+import { AuthService } from './services/auth.service';
 const ENV = process.env.NODE_ENV;
-console.log(ENV);
-
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -26,11 +26,11 @@ console.log(ENV);
         }),
         PostgreSqlModule,
     ],
-    controllers: [AppController, UsersController],
-    providers: [AppService, UsersService],
+    controllers: [AppController, UsersController, AuthController],
+    providers: [AppService, UsersService, AuthService],
 })
 export class AppModule {
     constructor() {
-        console.log(appConfigs());
+        console.log(authConfigs);
     }
 }

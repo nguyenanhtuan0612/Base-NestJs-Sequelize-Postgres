@@ -1,14 +1,16 @@
+import { LoginDto } from '@/dtos/login.dto';
 import { CreateUserDto } from '@/dtos/users.dto';
 import { User } from '@/entities/users.entity';
 import { IUser } from '@/interfaces/users.interface';
 import { Injectable } from '@nestjs/common';
 import { genSalt, hash } from 'bcrypt';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class UsersService {
     async create(createUserDto: CreateUserDto) {
         const user = new User();
-        user.email = createUserDto.email;
+        user.phone_number = createUserDto.phone_number;
         const salt = await genSalt(10);
         user.password = await hash(createUserDto.password, salt);
 
@@ -17,9 +19,11 @@ export class UsersService {
         return userData;
     }
 
-    async findByEmail(email: string): Promise<User | null> {
+    async findUserExits(user): Promise<User | null> {
         return User.findOne({
-            where: { email },
+            where: {
+                phone_number: user.phone_number,
+            },
         });
     }
 }

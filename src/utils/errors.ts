@@ -10,13 +10,28 @@ export const errors = {
     INVALIDATION_FAIL: {
         code: 3,
     },
+
     LOGIN_ERROR_UNAUTHORIZE: {
         detail: '{{token.unAuthorize}}',
         code: 4,
     },
-    EMAIL_EXIST: {
+    OTP_EXPIRED: {
+        detail: '{{otp.isExpired}}',
+        code: 10,
+    },
+    INCORRECT_INFO: {
+        detail: '{{user.incorrectInfo}}',
+        code: 9,
+    },
+
+    USER_NOT_ACTIVE: {
+        detail: '{{user.notActive}}',
+        code: 8,
+    },
+
+    USER_EXITS: {
         code: 5,
-        detail: '{{email.isAlreadeExist}}',
+        detail: '{{user.isAlreadyExist}}',
     },
     LOGIN_ERROR_MISSING: {
         detail: '{{token.isMissing}}',
@@ -25,5 +40,9 @@ export const errors = {
     SEQUELIZE_ERROR: {
         code: 7,
         detail: '{{sequelize.error}}',
+    },
+    NOT_FOUND: {
+        detail: '{{notFound}}',
+        code: 44,
     },
 };

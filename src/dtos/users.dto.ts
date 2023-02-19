@@ -1,17 +1,17 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsOptional } from 'class-validator';
 
 export class RegisterDto {
-    @IsEmail()
-    public email: string;
+    @IsOptional()
+    public phone_number: string;
 
-    @IsString()
+    @IsOptional()
     public password: string;
 }
 
 export class CreateUserDto {
-    @IsEmail()
-    public email: string;
-
-    @IsString()
+    @IsOptional()
     public password: string;
+
+    @IsOptional()
+    public phone_number: string;
 }
