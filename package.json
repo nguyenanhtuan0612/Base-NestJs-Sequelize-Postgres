@@ -1,5 +1,5 @@
 {
-    "name": "vip-native",
+    "name": "group-buy-vn",
     "version": "0.0.1",
     "description": "",
     "author": "",
@@ -32,12 +32,14 @@
         "class-validator": "^0.13.2",
         "cross-env": "^7.0.3",
         "jsonwebtoken": "^8.5.1",
+        "lodash": "^4.17.21",
         "pg": "^8.8.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "rxjs": "^7.2.0",
         "sequelize": "^6.25.3",
-        "sequelize-typescript": "^2.1.5"
+        "sequelize-typescript": "^2.1.5",
+        "twilio": "^4.7.2"
     },
     "devDependencies": {
         "@nestjs/cli": "^9.0.0",
