@@ -12,7 +12,7 @@ import {
 import { User } from './users.entity';
 
 @Table({
-    tableName: 'user_orders',
+    tableName: 'userOrders',
     timestamps: true,
 })
 export class UserOrder extends Model {
@@ -26,21 +26,21 @@ export class UserOrder extends Model {
         type: DataType.UUID,
         allowNull: false,
     })
-    user_id: string;
+    userId: string;
 
     @Column
-    order_id: number;
+    orderId: number;
 
     @Column
-    is_paid: boolean;
-
-    @Column
-    @CreatedAt
-    created_at: Date;
+    isPaid: boolean;
 
     @Column
     @CreatedAt
-    updated_at: Date;
+    createdAt: Date;
+
+    @Column
+    @CreatedAt
+    updatedAt: Date;
 
     @BelongsTo(() => User)
     user: User;

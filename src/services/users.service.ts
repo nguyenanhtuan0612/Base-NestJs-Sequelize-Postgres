@@ -10,7 +10,7 @@ import { Op } from 'sequelize';
 export class UsersService {
     async create(createUserDto: CreateUserDto) {
         const user = new User();
-        user.phone_number = createUserDto.phone_number;
+        user.phoneNumber = createUserDto.phoneNumber;
         const salt = await genSalt(10);
         user.password = await hash(createUserDto.password, salt);
 
@@ -22,7 +22,7 @@ export class UsersService {
     async findUserExits(user): Promise<User | null> {
         return User.findOne({
             where: {
-                phone_number: user.phone_number,
+                phoneNumber: user.phoneNumber,
             },
         });
     }

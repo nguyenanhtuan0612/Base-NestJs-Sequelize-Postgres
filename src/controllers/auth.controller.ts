@@ -25,7 +25,7 @@ export class AuthController {
     }
 
     @Post('/generateOTP')
-    async genOTP(@Res() res: Response, @Body() body: { phone_number: string }) {
+    async genOTP(@Res() res: Response, @Body() body: { phoneNumber: string }) {
         try {
             const rs = await this.service.generateOTP(body);
             return res.status(200).json(rs);

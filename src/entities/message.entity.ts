@@ -32,16 +32,16 @@ export class Message extends Model<Message> {
         defaultValue: DataType.NOW,
         allowNull: false,
     })
-    created_at: Date;
+    createdAt: Date;
 
     @ForeignKey(() => Chat)
     @Column({
         type: DataType.UUID,
         allowNull: false,
     })
-    chat_id: string;
+    chatId: string;
 
-    @BelongsTo(() => Chat, 'chat_id')
+    @BelongsTo(() => Chat, 'chatId')
     chat: Chat;
 
     @ForeignKey(() => User)
@@ -49,8 +49,8 @@ export class Message extends Model<Message> {
         type: DataType.UUID,
         allowNull: false,
     })
-    user_id: string;
+    userId: string;
 
-    @BelongsTo(() => User, 'user_id')
+    @BelongsTo(() => User, 'userId')
     user: User;
 }

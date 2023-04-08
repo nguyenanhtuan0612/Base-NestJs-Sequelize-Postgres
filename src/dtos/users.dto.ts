@@ -2,7 +2,7 @@ import { IsOptional } from 'class-validator';
 
 export class RegisterDto {
     @IsOptional()
-    public phone_number: string;
+    public phoneNumber: string;
 
     @IsOptional()
     public password: string;
@@ -13,5 +13,5 @@ export class CreateUserDto {
     public password: string;
 
     @IsOptional()
-    public phone_number: string;
+    public phoneNumber: string;
 }

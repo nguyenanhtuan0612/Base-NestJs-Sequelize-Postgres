@@ -27,7 +27,7 @@ export class User extends Model {
 
     @Unique
     @Column
-    phone_number: string;
+    phoneNumber: string;
 
     @Column({
         defaultValue: true,
@@ -43,13 +43,13 @@ export class User extends Model {
     role: string;
 
     @Column
-    otp_time: string;
+    otpTime: string;
 
     @Column
     @CreatedAt
-    created_at: Date;
+    createdAt: Date;
 
     @Column
     @UpdatedAt
-    updated_at: Date;
+    updatedAt: Date;
 }

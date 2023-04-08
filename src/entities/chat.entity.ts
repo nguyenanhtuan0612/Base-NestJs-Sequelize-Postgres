@@ -38,18 +38,18 @@ export class Chat extends Model<Chat> {
         defaultValue: DataType.NOW,
         allowNull: false,
     })
-    created_at: Date;
+    createdAt: Date;
 
     @Column({
         type: DataType.DATE,
         defaultValue: DataType.NOW,
         allowNull: false,
     })
-    updated_at: Date;
+    updatedAt: Date;
 
-    @BelongsTo(() => User, 'creator_id')
+    @BelongsTo(() => User, 'creatorId')
     creator: User;
 
-    @HasMany(() => Message, 'chat_id')
+    @HasMany(() => Message, 'chatId')
     messages: Message[];
 }

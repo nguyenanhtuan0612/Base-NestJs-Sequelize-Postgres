@@ -29,7 +29,7 @@ export class AuthService {
                 'Register Fail',
             ); // error
         const user = new User();
-        user.phone_number = registerDto.phone_number;
+        user.phoneNumber = registerDto.phoneNumber;
         const salt = await genSalt(10);
         user.password = await hash(registerDto.password, salt);
         const userData = await user.save();
@@ -67,7 +67,7 @@ export class AuthService {
 
     async generateJwtToken(user: any) {
         const payload = {
-            phone_number: user.phone_number,
+            phoneNumber: user.phoneNumber,
             sub: user.id,
         };
         const tokenExpiresIn = authConfigs().jwtExpiresIn;
@@ -75,7 +75,7 @@ export class AuthService {
         const accessToken = await this.jwtService.signAsync(payload, {
             expiresIn: tokenExpiresIn,
         });
-        const _user = pick(user, ['id', 'phone_number', 'active']);
+        const _user = pick(user, ['id', 'phoneNumber', 'active']);
         const result = {
             ..._user,
             accessToken,
@@ -84,28 +84,28 @@ export class AuthService {
         return result;
     }
 
-    async generateOTP(body: { phone_number: string }) {
+    async generateOTP(body: { phoneNumber: string }) {
         try {
             let user = await User.findOne({
                 where: {
-                    phone_number: body.phone_number,
+                    phoneNumber: body.phoneNumber,
                 },
             });
             if (!user) {
                 user = new User();
-                user.phone_number = body.phone_number;
+                user.phoneNumber = body.phoneNumber;
             }
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
             const otpExpired = new Date();
             otpExpired.setMinutes(otpExpired.getMinutes() + 5);
             user.otp = otp;
-            user.otp_time = otpExpired.getTime().toString();
+            user.otpTime = otpExpired.getTime().toString();
             const twilioClient = twilio(
                 twilioConfigs().twilioAccountSid,
                 twilioConfigs().twilioAccountToken,
             );
             // replace first 0 with +84
-            const phoneNumber = body.phone_number.replace(/^0/, '+84');
+            const phoneNumber = body.phoneNumber.replace(/^0/, '+84');
             await twilioClient.messages.create({
                 body: `Your OTP is ${otp}`,
                 from: twilioConfigs().twilioPhoneNumber,
@@ -144,7 +144,7 @@ export class AuthService {
                 );
             }
 
-            if (anonUser.otp_time < new Date().getTime().toString()) {
+            if (anonUser.otpTime < new Date().getTime().toString()) {
                 throw new ExceptionWithMessage(
                     errors.OTP_EXPIRED.detail,
                     400,
@@ -152,7 +152,7 @@ export class AuthService {
                 );
             }
             anonUser.otp = null;
-            anonUser.otp_time = null;
+            anonUser.otpTime = null;
             await anonUser.save();
             return anonUser;
             // time now to compare with otp expired timestamp

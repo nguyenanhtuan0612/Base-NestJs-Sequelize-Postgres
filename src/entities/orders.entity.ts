@@ -36,32 +36,32 @@ export class Orders extends Model {
     traders: string;
 
     @Column
-    total_price: number;
+    totalPrice: number;
 
     @ForeignKey(() => Product)
     @Column
-    product_id: number;
+    productId: number;
 
     @Column
     @CreatedAt
-    created_at: Date;
+    createdAt: Date;
 
     @ForeignKey(() => User)
     @Column({
         type: DataType.UUID,
     })
-    created_by: string;
+    createdBy: string;
 
     @Column
     @UpdatedAt
-    updated_at: Date;
+    updatedAt: Date;
 
     @BelongsTo(() => Product)
     product: Product;
 
-    @BelongsTo(() => User, 'created_by')
+    @BelongsTo(() => User, 'createdBy')
     user: User;
 
-    @BelongsTo(() => User, 'trader_id')
+    @BelongsTo(() => User, 'traderId')
     trader: User;
 }

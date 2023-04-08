@@ -25,7 +25,7 @@ export class Product extends Model {
     link: string;
 
     @Column
-    unit_price: number;
+    unitPrice: number;
 
     @Column
     discount: number;
@@ -38,9 +38,9 @@ export class Product extends Model {
 
     @Column
     @CreatedAt
-    created_at: Date;
+    createdAt: Date;
 
     @Column
     @UpdatedAt
-    updated_at: Date;
+    updatedAt: Date;
 }

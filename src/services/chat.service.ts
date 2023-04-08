@@ -16,8 +16,8 @@ export class ChatService {
             try {
                 const message = new Message();
                 message.content = createMessageDto.content;
-                message.chat_id = createMessageDto.chat_id;
-                message.user_id = createMessageDto.user_id;
+                message.chatId = createMessageDto.chatId;
+                message.userId = createMessageDto.userId;
                 await message.save();
                 resolve(message);
             } catch (error) {

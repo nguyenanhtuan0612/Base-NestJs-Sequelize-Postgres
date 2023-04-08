@@ -5,7 +5,7 @@ export class LoginDto {
     public password: string;
 
     @IsOptional()
-    public phone_number: string;
+    public phoneNumber: string;
 }
 
 export class LoginWithOTPDto {
@@ -13,5 +13,5 @@ export class LoginWithOTPDto {
     public otp: string;
 
     @IsOptional()
-    public phone_number: string;
+    public phoneNumber: string;
 }
