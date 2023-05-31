@@ -1,14 +1,12 @@
-import { Module } from '@nestjs/common';
-import { AppController } from '@/app.controller';
-import { AppService } from '@/app.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { appConfigs, authConfigs } from '@/config';
 import { PostgreSqlModule } from '@databases';
 import { JwtModule } from '@nestjs/jwt';
-import UsersController from './controllers/users.controller';
-import { UsersService } from './services/users.service';
-import { AuthController } from './controllers/auth.controller';
-import { AuthService } from './services/auth.service';
+import controllers from './controllers';
+import services from './services';
+import { QueryMiddleware } from './middlewares/query.middleware';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 const ENV = process.env.NODE_ENV;
 @Module({
     imports: [
@@ -26,11 +24,12 @@ const ENV = process.env.NODE_ENV;
         }),
         PostgreSqlModule,
     ],
-    controllers: [AppController, UsersController, AuthController],
-    providers: [AppService, UsersService, AuthService],
+    controllers: [...Object.values(controllers)],
+    providers: [...Object.values(services), QueryMiddleware, AuthMiddleware],
 })
-export class AppModule {
-    constructor() {
-        console.log(authConfigs);
+export class AppModule implements NestModule {
+    constructor() {}
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(QueryMiddleware).forRoutes('*');
     }
 }

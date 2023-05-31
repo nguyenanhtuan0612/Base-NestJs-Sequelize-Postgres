@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterDto } from '@/dtos/users.dto';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { errors } from '@/utils/errors';
 import { User } from '@/entities/users.entity';
-import { compare, genSalt, hash } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcryptjs';
 import { ExceptionWithMessage } from '@/exceptions/HttpException';
 import { LoginDto, LoginWithOTPDto } from '@/dtos/login.dto';
 import { authConfigs } from '@/config';
@@ -14,7 +14,7 @@ import twilioConfigs from '@/config/twilio.configs';
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly userService: UsersService,
+        private readonly userService: UserService,
         private readonly jwtService: JwtService,
     ) {}
 

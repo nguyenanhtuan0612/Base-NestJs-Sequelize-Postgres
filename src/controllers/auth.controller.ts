@@ -1,17 +1,19 @@
 import { LoginDto, LoginWithOTPDto } from '@/dtos/login.dto';
 import { ExceptionWithMessage } from '@/exceptions/HttpException';
+import { QueryMiddleware } from '@/middlewares/query.middleware';
 import { AuthService } from '@/services/auth.service';
-import { UsersService } from '@/services/users.service';
+import { UserService } from '@/services/user.service';
 import { errors } from '@/utils/errors';
 import { RegisterDto } from '@dtos/users.dto';
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 
 @Controller('auth')
+@UseInterceptors(QueryMiddleware)
 export class AuthController {
     constructor(
         private readonly service: AuthService,
-        private readonly userService: UsersService,
+        private readonly userService: UserService,
     ) {}
 
     @Post('/register')

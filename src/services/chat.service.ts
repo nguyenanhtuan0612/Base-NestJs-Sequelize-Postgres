@@ -2,14 +2,10 @@
 import { CreateMessageDto } from '@/dtos/chat.dto';
 import { Message } from '@/entities/message.entity';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class ChatService {
-    constructor(
-        @InjectModel(Message)
-        private readonly messageModel: typeof Message,
-    ) {}
+    constructor() {}
 
     create(createMessageDto: CreateMessageDto): Promise<Message> {
         return new Promise(async (resolve, reject) => {

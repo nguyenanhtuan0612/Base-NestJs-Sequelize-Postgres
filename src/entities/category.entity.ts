@@ -4,7 +4,7 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
     tableName: 'categories',
     timestamps: true,
 })
-export class Category extends Model<Category> {
+export class Category extends Model {
     @Column({
         type: DataType.UUID,
         defaultValue: DataType.UUIDV4,

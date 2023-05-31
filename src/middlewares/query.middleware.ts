@@ -1,127 +1,132 @@
-import { NextFunction, Response } from 'express';
-import { Options, RequestWithOptions } from '@/interfaces/request.interface';
-import { Filter, Order } from '@/dtos/query.dto';
-import { validation } from '@/utils/validators';
-import { Op } from 'sequelize';
-import { errors } from '@/utils/errors';
-import { Injectable } from '@nestjs/common';
-import { NestMiddleware } from '@nestjs/common';
-import { ExceptionWithMessage } from '@/exceptions/HttpException';
-
-const generateWhere = (filter: Filter) => {
-    const { prop, operator, value } = filter;
-    switch (operator) {
-        case 'eq': {
-            return { [prop]: value };
-        }
-        case 'not': {
-            return { [prop]: { [Op.not]: value } };
-        }
-        case 'lt': {
-            return { [prop]: { [Op.lt]: value } };
-        }
-        case 'lte': {
-            return { [prop]: { [Op.lte]: value } };
-        }
-        case 'gt': {
-            return { [prop]: { [Op.gt]: value } };
-        }
-        case 'gte': {
-            return { [prop]: { [Op.gte]: value } };
-        }
-        case 'like': {
-            return { [prop]: { [Op.like]: value } };
-        }
-        case 'iLike': {
-            return { [prop]: { [Op.iLike]: value } };
-        }
-        case 'in': {
-            if (!Array.isArray(value)) {
-                return { [prop]: value };
-            }
-            return { [prop]: { [Op.in]: value } };
-        }
-        case 'notIn': {
-            if (!Array.isArray(value)) {
-                return { [prop]: value };
-            }
-            return { [prop]: { [Op.notIn]: value } };
-        }
-        default: {
-            return { [prop]: value };
-        }
-    }
-};
-
-const generateOrder = (order: Order) => {
-    const { prop, direction } = order;
-    return { [prop]: direction.toUpperCase() };
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Response, NextFunction } from 'express';
+import Sequelize from 'sequelize';
+const Op = Sequelize.Op;
+const specific = ['like', 'notLike', 'iLike', 'notILike'];
+const operators = {
+    '=': Sequelize.Op.eq,
+    eq: Sequelize.Op.eq,
+    '>': Sequelize.Op.gt,
+    gt: Sequelize.Op.gt,
+    '>=': Sequelize.Op.gte,
+    gte: Sequelize.Op.gte,
+    '<': Sequelize.Op.lt,
+    lt: Sequelize.Op.lt,
+    '<=': Sequelize.Op.lte,
+    lte: Sequelize.Op.lte,
+    '!=': Sequelize.Op.ne,
+    ne: Sequelize.Op.ne,
+    in: Sequelize.Op.in,
+    notIn: Sequelize.Op.notIn,
+    like: Sequelize.Op.like,
+    notLike: Sequelize.Op.notLike,
+    iLike: Sequelize.Op.iLike,
+    notILike: Sequelize.Op.notILike,
+    regexp: Sequelize.Op.regexp,
+    notRegexp: Sequelize.Op.notRegexp,
+    between: Sequelize.Op.between,
 };
 
 @Injectable()
 export class QueryMiddleware implements NestMiddleware {
-    async use(req: RequestWithOptions, res: Response, next: NextFunction) {
+    use(req: any, res: Response, next: NextFunction) {
+        const paginate = this.paginate(req);
+        const where = this.where(req);
+        const order = this.sort(req);
+
+        Object.assign(req, {
+            options: Object.assign({}, paginate, where, order),
+        });
+        next();
+    }
+
+    private where(req) {
+        let { filter } = req.query;
+        const where = {};
+
+        if (this.isJson(filter)) {
+            filter = JSON.parse(filter);
+            if (Array.isArray(filter)) {
+                filter.forEach((field) => {
+                    const { operator, prop } = field;
+                    let { value } = field;
+
+                    if (typeof value === 'string' || value instanceof String) {
+                        value = value.replace(/%/g, '\\%');
+                        value = value.replace(/\\/g, '\\');
+                    }
+
+                    if (prop && operator && operators[operator]) {
+                        if (specific.indexOf(operator) >= 0) {
+                            value = `%${value}%`;
+                        }
+
+                        Object.assign(where, {
+                            [prop]: {
+                                [operators[operator]]: value,
+                            },
+                        });
+                    }
+                    if (operator === 'search') {
+                        const value = {
+                            [Op.iLike]: '%' + field.value.toString() + '%',
+                        };
+                        const fields = field.prop.split(',');
+                        const filters = {};
+                        fields.forEach((item: any) => (filters[item] = value));
+                        Object.assign(where, { [Op.or]: filters });
+                    }
+                });
+            }
+        }
+
+        return { where };
+    }
+
+    private sort(req) {
+        let { sort } = req.query;
+        const order = [];
+
+        if (!this.isJson(sort)) {
+            return order;
+        }
+
+        sort = JSON.parse(sort);
+
+        if (Array.isArray(sort)) {
+            sort.forEach((field) => {
+                order.push([field.prop, field.direction]);
+            });
+        }
+
+        return {
+            order,
+        };
+    }
+
+    private paginate(req) {
+        const { limit, start } = req.query;
+        const paginate = { limit: 10, offset: 0, subQuery: false };
+        if (limit) {
+            paginate.limit = limit;
+            paginate.subQuery = true;
+        } else paginate.limit = 10;
+
+        if (start != undefined) {
+            paginate.offset = start;
+        }
+        if (paginate.limit > 20) {
+            paginate.limit = 20;
+        }
+        return paginate;
+    }
+
+    private isJson(str) {
         try {
-            const { limit, offset, filter, order } = req.query;
-            const options: Options = {
-                offset: Number(offset) || 0,
-                limit: Number(limit) || 10,
-                where: {},
-                order: {},
-            };
-
-            const filterArr = filter ? JSON.parse(filter.toString()) : [];
-            if (Array.isArray(filterArr)) {
-                for (const iterator of filterArr) {
-                    const { valid, message } = await validation(
-                        Filter,
-                        iterator,
-                    );
-                    if (!valid) {
-                        next(
-                            new ExceptionWithMessage(
-                                errors.FILTER_INVALID.detail,
-                                400,
-                                errors.FILTER_INVALID.code,
-                                'Filter error: ' + message,
-                            ),
-                        );
-                    }
-                    options.where = Object.assign(
-                        options.where,
-                        generateWhere(iterator),
-                    );
-                }
-            }
-
-            const orderArr = order ? JSON.parse(order.toString()) : [];
-            if (Array.isArray(orderArr)) {
-                for (const iterator of orderArr) {
-                    const { valid, message } = await validation(
-                        Order,
-                        iterator,
-                    );
-                    if (!valid) {
-                        next(
-                            new ExceptionWithMessage(
-                                errors.ORDER_INVALID.detail,
-                                400,
-                                errors.ORDER_INVALID.code,
-                                'Order error: ' + message,
-                            ),
-                        );
-                    }
-                    options.order = Object.assign(
-                        options.order,
-                        generateOrder(iterator),
-                    );
-                }
-            }
-
-            req.options = options;
-            next();
-        } catch (error) {
-            next(error);
+            JSON.parse(str);
+            return true;
+        } catch (e) {
+            return false;
         }
     }
 }

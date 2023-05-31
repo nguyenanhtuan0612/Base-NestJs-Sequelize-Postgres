@@ -9,7 +9,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
         SequelizeModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({
-                //console.log(appConfigs().postgres);
                 dialect: 'postgres',
                 host: appConfigs().postgres.host,
                 port: appConfigs().postgres.port,
@@ -25,7 +24,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
                 },
                 models: entities,
                 hooks: {
-                    beforeCount: function (options: any) {
+                    beforeCount(options: any) {
                         if (!this._scope.include) {
                             options.subQuery = false;
                         }
@@ -51,6 +50,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
 })
 export class PostgreSqlModule {
     constructor() {
-        console.log(appConfigs());
+        // console.log(appConfigs());
     }
 }
