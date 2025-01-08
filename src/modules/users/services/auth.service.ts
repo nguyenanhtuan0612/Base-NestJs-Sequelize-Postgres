@@ -53,6 +53,7 @@ export class AuthService {
 
                 const tokenExpiresIn = authConfigs().jwtExpiresIn;
                 const accessToken = await this.jwtService.signAsync(payload, {
+                    secret: authConfigs().jwtSecretKey,
                     expiresIn: tokenExpiresIn,
                 });
                 const refreshTokenExpiresIn = authConfigs().jwtRefreshExpiresIn;
