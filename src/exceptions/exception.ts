@@ -33,8 +33,13 @@ export class AllExceptionFilter implements ExceptionFilter {
         let code = 999;
 
         const response = ctx.getResponse();
-
         switch (true) {
+            case error instanceof ExceptionWithMessage:
+                const exceptionMsg = error;
+                message = exceptionMsg.message;
+                code = exceptionMsg.code;
+                detail = exceptionMsg.detail;
+                break;
             case error instanceof HttpException:
                 const exception: HttpException = error;
                 const errRes = exception.getResponse();
@@ -44,20 +49,16 @@ export class AllExceptionFilter implements ExceptionFilter {
                 }
                 status = exception.getStatus();
                 message = '';
-
-                if (exception instanceof ExceptionWithMessage) {
-                    const exceptionMsg: ExceptionWithMessage = error;
-                    message = exceptionMsg.message;
-                    code = exceptionMsg.code;
+                if (status == 401) {
+                    code = errors.LOGIN_ERROR_UNAUTHORIZE.code;
                 }
                 break;
             case error instanceof BaseError:
                 const baseErr: BaseError = error;
                 code = errors.SEQUELIZE_ERROR.code;
                 message = baseErr.message;
-                detail = error.errors || '';
+                //detail = error.errors || '';
                 status = HttpStatus.BAD_REQUEST;
-
                 break;
             case error instanceof Error:
                 const err: Error = error;
@@ -71,15 +72,23 @@ export class AllExceptionFilter implements ExceptionFilter {
     }
 
     private handleLogger(
-        exception: HttpException | BaseError | Error | any,
+        exception:
+            | HttpException
+            | ExceptionWithMessage
+            | BaseError
+            | Error
+            | any,
     ): void {
         let message = 'Internal Server Error';
         switch (true) {
+            case exception instanceof ExceptionWithMessage:
+                message = JSON.stringify(exception.detail);
+                break;
             case exception instanceof HttpException:
                 message = JSON.stringify(exception.getResponse());
                 break;
             case exception instanceof BaseError:
-                message = JSON.stringify(exception.errors);
+                message = JSON.stringify(exception.message);
                 break;
             case exception instanceof Error:
                 message = exception.message;
