@@ -5,7 +5,7 @@ import { Op } from 'sequelize';
 import { errors } from '@/utils/errors';
 import { Injectable } from '@nestjs/common';
 import { NestMiddleware } from '@nestjs/common';
-import { ExceptionWithMessage } from '@/exceptions/HttpException';
+import { ExceptionWithMessage } from '@/exceptions/httpExceptionWithMsg';
 import { Filter, Order } from '@/dtos/query.dto';
 
 const generateWhere = (filter: Filter) => {

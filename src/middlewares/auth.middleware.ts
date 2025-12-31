@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import { errors } from '@/utils/errors';
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { ExceptionWithMessage } from '@/exceptions/HttpException';
+import { ExceptionWithMessage } from '@/exceptions/httpExceptionWithMsg';
 import { UserResponse } from '@/dtos/users.dto';
 import { User } from '@/modules/users/entities/users.entity';
 

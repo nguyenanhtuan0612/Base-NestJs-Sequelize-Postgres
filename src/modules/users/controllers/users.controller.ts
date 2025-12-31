@@ -14,7 +14,7 @@ import { JwtAuthGuard } from '@/guards/jwt.guard';
 import { RolesGuard } from '@/guards/role.guard';
 import { Role } from '@/utils/constants';
 import { RequestWithUserOption } from '@/interfaces/auth.interface';
-import { ExceptionWithMessage } from '@/exceptions/HttpException';
+import { ExceptionWithMessage } from '@/exceptions/httpExceptionWithMsg';
 import { errors } from '@/utils/errors';
 import { Response } from 'express';
 import { UsersService } from '../services/users.service';

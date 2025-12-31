@@ -4,7 +4,7 @@ import {
     UpdateUserDto,
     UserResponse,
 } from '@/dtos/users.dto';
-import { ExceptionWithMessage } from '@/exceptions/HttpException';
+import { ExceptionWithMessage } from '@/exceptions/httpExceptionWithMsg';
 import { Options } from '@/interfaces/request.interface';
 import { IUser } from '@/interfaces/users.interface';
 import { errors } from '@/utils/errors';

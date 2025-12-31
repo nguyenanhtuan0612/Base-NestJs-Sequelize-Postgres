@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { errors } from '@/utils/errors';
 import { compare, genSalt, hash } from 'bcrypt';
-import { ExceptionWithMessage } from '@/exceptions/HttpException';
+import { ExceptionWithMessage } from '@/exceptions/httpExceptionWithMsg';
 import { authConfigs } from '@/config';
 import { JwtService } from '@nestjs/jwt';
 import {

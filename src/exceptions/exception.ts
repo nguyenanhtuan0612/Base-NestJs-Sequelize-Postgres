@@ -8,7 +8,7 @@ import {
     Logger,
 } from '@nestjs/common';
 import { BaseError } from 'sequelize';
-import { ExceptionWithMessage } from './HttpException';
+import { ExceptionWithMessage } from './httpExceptionWithMsg';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {

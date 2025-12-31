@@ -1,6 +1,6 @@
 import { authConfigs } from '@/config';
 import { UserResponse } from '@/dtos/users.dto';
-import { ExceptionWithMessage } from '@/exceptions/HttpException';
+import { ExceptionWithMessage } from '@/exceptions/httpExceptionWithMsg';
 import { User } from '@/modules/users/entities/users.entity';
 import { errors } from '@/utils/errors';
 import { PassportStrategy } from '@nestjs/passport';
